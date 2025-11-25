@@ -1,0 +1,294 @@
+<mujoco model="NEW">
+  <default>
+    <default class="robot">
+      <default class="motor">
+        <joint />
+        <motor />
+      </default>
+      <default class="visual">
+        <geom material="visualgeom" contype="0" conaffinity="0" group="2" />
+      </default>
+      <default class="collision">
+        <geom material="collision_material" condim="3" contype="0" conaffinity="1" priority="1" group="1" solref="0.005 1" solimp="0.99 0.999 1e-05" friction="1 0.01 0.01" />
+      </default>
+    </default>
+  </default>
+
+  <compiler angle="radian" />
+  <option gravity="0 0 0" />
+
+  <asset>
+    <material name="Alloy steel" rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+    <material name="default_material" rgba="0.7 0.7 0.7 1" />
+    <material name="collision_material" rgba="1.0 0.28 0.1 0.9" />
+    <!-- 添加地面材质 -->
+    <material name="grid" rgba="0.8 0.8 0.8 1" texture="grid" texrepeat="5 5" texuniform="true"/>
+    <texture type="2d" builtin="checker" name="grid" rgb1="0.6 0.6 0.6" rgb2="0.8 0.8 0.8" width="512" height="512"/>
+    
+    <!-- 添加水池材质 -->
+    <material name="glass" rgba="0.7 0.9 1.0 0.3" reflectance="0.1" shininess="0.9" emission="0"/>
+    <material name="water" rgba="0.2 0.5 0.8 0.6" reflectance="0.3" shininess="0.1" emission="0"/>
+    
+    <mesh name="base_link.STL" file="D://NEW/meshes/base_link.STL" />
+    <mesh name="link1.STL" file="D://NEW/meshes/link1.STL" />
+    <mesh name="link2.STL" file="D://NEW/meshes/link2.STL" />
+    <mesh name="link3.STL" file="D://NEW/meshes/link3.STL" />
+    <mesh name="link4.STL" file="D://NEW/meshes/link4.STL" />
+    <mesh name="link5.STL" file="D://NEW/meshes/link5.STL" />
+    <mesh name="link6.STL" file="D://NEW/meshes/link6.STL" />
+    <mesh name="link7.STL" file="D://NEW/meshes/link7.STL" />
+    <mesh name="link8.STL" file="D://NEW/meshes/link8.STL" />
+    <mesh name="link9.STL" file="D://NEW/meshes/link9.STL" />
+    <mesh name="link10.STL" file="D://NEW/meshes/link10.STL" />
+    <mesh name="link11.STL" file="D://NEW/meshes/link11.STL" />
+    <mesh name="link12.STL" file="D://NEW/meshes/link12.STL" />
+    <mesh name="link13.STL" file="D://NEW/meshes/link13.STL" />
+    <mesh name="link14.STL" file="D://NEW/meshes/link14.STL" />
+    <mesh name="link15.STL" file="D://NEW/meshes/link15.STL" />
+    <mesh name="link16.STL" file="D://NEW/meshes/link16.STL" />
+    <mesh name="link17.STL" file="D://NEW/meshes/link17.STL" />
+    <mesh name="link18.STL" file="D://NEW/meshes/link18.STL" />
+    <mesh name="link19.STL" file="D://NEW/meshes/link19.STL" />
+    <mesh name="link20.STL" file="D://NEW/meshes/link20.STL" />
+  </asset>
+
+  <worldbody>
+    <!-- 添加地面 -->
+    <geom name="ground" type="plane" pos="0 0 -0.1" size="5 5 0.1" material="grid" condim="3"/>
+    
+    <!-- 添加水池 -->
+    <body name="water_pool" pos="0 0 0">
+      <geom name="pool_bottom" type="box" size="1.6 1.6 0.05" pos="0 0 -0.05" material="glass" contype="1" conaffinity="1" group="1"/>
+      <geom name="pool_wall_front" type="box" size="1.6 0.05 0.3" pos="0 1.55 0.25" material="glass" contype="1" conaffinity="1" group="1"/>
+      <geom name="pool_wall_back" type="box" size="1.6 0.05 0.3" pos="0 -1.55 0.25" material="glass" contype="1" conaffinity="1" group="1"/>
+      <geom name="pool_wall_left" type="box" size="0.05 1.6 0.3" pos="-1.55 0 0.25" material="glass" contype="1" conaffinity="1" group="1"/>
+      <geom name="pool_wall_right" type="box" size="0.05 1.6 0.3" pos="1.55 0 0.25" material="glass" contype="1" conaffinity="1" group="1"/>
+      <geom name="water_body" type="box" size="1.5 1.5 0.2" pos="0 0 0.2" material="water" contype="0" conaffinity="0" group="2"/>
+    </body>
+    
+    <!-- 添加灯光 -->
+    <light name="top_light" pos="0 0 5" dir="0 0 -1" directional="true" diffuse="0.8 0.8 0.8" specular="0.5 0.5 0.5"/>
+    <light name="front_light" pos="2 2 3" dir="-1 -1 -1" directional="true" diffuse="0.6 0.6 0.6" specular="0.3 0.3 0.3"/>
+    <light name="side_light" pos="-3 0 2" dir="1 0 -0.5" directional="true" diffuse="0.4 0.4 0.4" specular="0.2 0.2 0.2"/>
+    <light name="ambient" pos="0 0 10" dir="0 0 -1" directional="false" diffuse="0.3 0.3 0.3" specular="0.1 0.1 0.1" castshadow="false"/>
+
+    <!-- 将机器人放置在水中 -->
+    <body name="base_link" pos="0.00000000 0.00000000 0.4" quat="1 0 0 0" childclass="robot">
+      <freejoint name="floating_base" />
+      <geom name="base_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="base_link.STL" class="collision" />
+      <geom name="base_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="base_link.STL" class="visual" />
+      
+      <!-- ==================== 前左腿 (Front-Left Leg) ==================== -->
+      <body name="link1" pos="0.238 0.04 0.0255" quat="1.0 0.0 0.0 0.0">
+        <joint name="joint1" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="-1 0 0" />
+        <!-- ===== 添加: 传感器锚点 ===== -->
+        <site name="FL_sensor_site" size="0.01" pos="0 0 0"/>
+        <inertial pos="0.0374940755558633 0.0287806160930604 -5.51295120665429E-15" quat="1.0 0.0 0.0 0.0" mass="0.722676827244105" diaginertia="0.000118639616383102 0.000203468319239275 0.000244932653494567" />
+        <geom name="link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link1.STL" class="collision" />
+        <geom name="link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link1.STL" class="visual" />
+        <body name="link2" pos="0.0252 0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint2" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.00697950968096039 -0.0028218372320942 -0.0174805683255128" quat="1.0 0.0 0.0 0.0" mass="0.0268950482909279" diaginertia="6.31259586326834e-06 7.46044044527853e-06 1.32797134006266e-06" />
+          <geom name="link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link2.STL" class="collision" />
+          <geom name="link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link2.STL" class="visual" />
+          <body name="link3" pos="-0.035132 0.002 -0.088265" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint3" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="0.0609614560593671 0.000986034678387482 -0.0636585437566328" quat="1.0 0.0 0.0 0.0" mass="0.0779474978805932" diaginertia="2.12201042443459e-05 4.42163329676407e-05 2.65761171904145e-05" />
+            <geom name="link3_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link3.STL" class="collision" />
+            <geom name="link3_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link3.STL" class="visual" />
+          </body>
+        </body>
+        <body name="link4" pos="0.0252 0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint4" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.00603010961963518 0.0062445921740914 -0.000314674428414857" quat="1.0 0.0 0.0 0.0" mass="0.0159030443494417" diaginertia="3.38353940297654e-07 2.01088682227731e-06 1.8434570730816e-06" />
+          <geom name="link4_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link4.STL" class="collision" />
+          <geom name="link4_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link4.STL" class="visual" />
+          <body name="link5" pos="-0.034962 0.01 -0.0016262" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint5" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="-0.0184339926748522 -0.00199999999998551 -0.0332293199451473" quat="1.0 0.0 0.0 0.0" mass="0.0173483226698447" diaginertia="7.19882447611609e-06 9.39749313903654e-06 2.27115038759602e-06" />
+            <geom name="link5_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link5.STL" class="collision" />
+            <geom name="link5_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link5.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+
+      <!-- ==================== 前右腿 (Front-Right Leg) ==================== -->
+      <body name="link6" pos="0.022 0.04 0.0255" quat="1.0 0.0 0.0 0.0">
+        <joint name="joint6" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="-1 0 0" />
+        <!-- ===== 添加: 传感器锚点 ===== -->
+        <site name="FR_sensor_site" size="0.01" pos="0 0 0"/>
+        <inertial pos="0.0374940755558633 0.0287806160930604 1.19765308781439E-14" quat="1.0 0.0 0.0 0.0" mass="0.722676827244104" diaginertia="0.000118639616383102 0.000203468319239275 0.000244932653494567" />
+        <geom name="link6_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link6.STL" class="collision" />
+        <geom name="link6_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link6.STL" class="visual" />
+        <body name="link7" pos="0.0252 0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint7" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.00800900565702408 -0.00282183768368623 -0.0170334849465399" quat="1.0 0.0 0.0 0.0" mass="0.0268950516273113" diaginertia="6.01532042830694e-06 7.46044060878307e-06 1.625246957281e-06" />
+          <geom name="link7_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link7.STL" class="collision" />
+          <geom name="link7_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link7.STL" class="visual" />
+          <body name="link8" pos="-0.040331 0.002 -0.086014" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint8" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="0.0546571128851023 0.000986034678650299 -0.0691470124380303" quat="1.0 0.0 0.0 0.0" mass="0.0779474978801364" diaginertia="2.50262991948701e-05 4.42163329675988e-05 2.27699222399006e-05" />
+            <geom name="link8_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link8.STL" class="collision" />
+            <geom name="link8_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link8.STL" class="visual" />
+          </body>
+        </body>
+        <body name="link9" pos="0.0252 0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint9" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.0060287988055903 0.00624459597998903 0.000338876079688754" quat="1.0 0.0 0.0 0.0" mass="0.0159030730128191" diaginertia="3.42134448469797e-07 2.01088788103758e-06 1.83967792932167e-06" />
+          <geom name="link9_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link9.STL" class="collision" />
+          <geom name="link9_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link9.STL" class="visual" />
+          <body name="link10" pos="-0.034933 0.01 0.002162" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint10" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="-0.0200094139532123 -0.00199999999971648 -0.0323051624437094" quat="1.0 0.0 0.0 0.0" mass="0.0173483226698448" diaginertia="6.80838506520307e-06 9.39749313903656e-06 2.66158979850905e-06" />
+            <geom name="link10_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link10.STL" class="collision" />
+            <geom name="link10_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link10.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+
+      <!-- ==================== 后左腿 (Hind-Left Leg) ==================== -->
+      <body name="link11" pos="0.22824 -0.0792 0.023874" quat="1.0 0.0 0.0 0.0">
+        <joint name="joint11" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="-1 0 0" />
+        <!-- ===== 添加: 传感器锚点 ===== -->
+        <site name="HL_sensor_site" size="0.01" pos="0 0 0"/>
+        <inertial pos="0.0472562785167391 0.0104193839069389 0.00162615009220195" quat="1.0 0.0 0.0 0.0" mass="0.722676827244105" diaginertia="0.000118639616383102 0.000203468319239275 0.000244932653494567" />
+        <geom name="link11_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link11.STL" class="collision" />
+        <geom name="link11_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link11.STL" class="visual" />
+        <body name="link12" pos="0.034962 0.01 0.0016262" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint12" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.00697950891893956 0.00282183738101539 -0.0174805658351361" quat="1.0 0.0 0.0 0.0" mass="0.0268950500361207" diaginertia="6.31259649462711e-06 7.46044071039635e-06 1.32797106257538e-06" />
+          <geom name="link12_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link12.STL" class="collision" />
+          <geom name="link12_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link12.STL" class="visual" />
+          <body name="link13" pos="-0.035132 -0.002 -0.088265" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint13" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="0.0609614536470013 -0.000986034680156414 -0.0636585460749778" quat="1.0 0.0 0.0 0.0" mass="0.0779474978805934" diaginertia="2.12201057556931e-05 4.4216332967651e-05 2.65761156790776e-05" />
+            <geom name="link13_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link13.STL" class="collision" />
+            <geom name="link13_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link13.STL" class="visual" />
+          </body>
+        </body>
+        <body name="link14" pos="0.034962 0.01 0.0016262" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint14" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.00603010650175373 -0.00624459231874556 -0.000314674471946396" quat="1.0 0.0 0.0 0.0" mass="0.01590304642223" diaginertia="3.38353815028825e-07 2.01088709305137e-06 1.84345756542662e-06" />
+          <geom name="link14_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link14.STL" class="collision" />
+          <geom name="link14_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link14.STL" class="visual" />
+          <body name="link15" pos="-0.034962 -0.01 -0.0016262" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint15" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="-0.0184339925545847 0.00199999999985805 -0.0332293172434545" quat="1.0 0.0 0.0 0.0" mass="0.0173483226698448" diaginertia="7.19882457768127e-06 9.39749313903656e-06 2.27115028603086e-06" />
+            <geom name="link15_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link15.STL" class="collision" />
+            <geom name="link15_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link15.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+
+      <!-- ==================== 后右腿 (Hind-Right Leg) ==================== -->
+      <body name="link16" pos="0.022 -0.04 0.0255" quat="1.0 0.0 0.0 0.0">
+        <joint name="joint16" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="-1 0 0" />
+        <!-- ===== 添加: 传感器锚点 ===== -->
+        <site name="HR_sensor_site" size="0.01" pos="0 0 0"/>
+        <inertial pos="0.0374940755558633 -0.0287806160930604 -2.0717802473591E-13" quat="1.0 0.0 0.0 0.0" mass="0.722676827244104" diaginertia="0.000118639616383102 0.000203468319239275 0.000244932653494567" />
+        <geom name="link16_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link16.STL" class="collision" />
+        <geom name="link16_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link16.STL" class="visual" />
+        <body name="link17" pos="0.0252 -0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint17" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.0080090047699647 0.00282183783994129 -0.0170334824999958" quat="1.0 0.0 0.0 0.0" mass="0.0268950534053884" diaginertia="6.01532106245458e-06 7.4604408753406e-06 1.62524667833794e-06" />
+          <geom name="link17_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link17.STL" class="collision" />
+          <geom name="link17_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link17.STL" class="visual" />
+          <body name="link18" pos="-0.040331 -0.002 -0.086014" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint18" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="0.0546571128851729 -0.000986034678257239 -0.0691470124380463" quat="1.0 0.0 0.0 0.0" mass="0.0779474978801365" diaginertia="2.50262991948759e-05 4.42163329676132e-05 2.27699222399093e-05" />
+            <geom name="link18_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link18.STL" class="collision" />
+            <geom name="link18_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link18.STL" class="visual" />
+          </body>
+        </body>
+        <body name="link19" pos="0.0252 -0.0292 0" quat="1.0 0.0 0.0 0.0">
+          <joint name="joint19" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+          <inertial pos="-0.0060287958610773 -0.00624459622854674 0.000338874981405848" quat="1.0 0.0 0.0 0.0" mass="0.01590307558711" diaginertia="3.4213448024908e-07 2.0108881733262e-06 1.83967829207453e-06" />
+          <geom name="link19_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link19.STL" class="collision" />
+          <geom name="link19_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link19.STL" class="visual" />
+          <body name="link20" pos="-0.034933 -0.01 0.002162" quat="1.0 0.0 0.0 0.0">
+            <joint name="joint20" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" />
+            <inertial pos="-0.0200094139530949 0.00199999999994856 -0.0323051624437289" quat="1.0 0.0 0.0 0.0" mass="0.0173483226698447" diaginertia="6.80838506520305e-06 9.39749313903652e-06 2.66158979850904e-06" />
+            <geom name="link20_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="link20.STL" class="collision" />
+            <geom name="link20_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="" type="mesh" mesh="link20.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+      
+      <site name="base_link_site" pos="0 0 0" quat="1 0 0 0" />
+      <camera name="front_camera" mode="track" fovy="90.0" quat="4.329637285359678e-17 4.329637285359677e-17 0.7071067811865475 0.7071067811865476" pos="0.0 2.0 0.5" />
+      <camera name="side_camera" mode="track" fovy="90.0" quat="-0.5 -0.4999999999999999 0.5 0.5000000000000001" pos="-2.0 0.0 0.5" />
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="joint1_ctrl" joint="joint1" class="motor" />
+    <motor name="joint2_ctrl" joint="joint2" class="motor" />
+    <motor name="joint3_ctrl" joint="joint3" class="motor" />
+    <motor name="joint4_ctrl" joint="joint4" class="motor" />
+    <motor name="joint5_ctrl" joint="joint5" class="motor" />
+    <motor name="joint6_ctrl" joint="joint6" class="motor" />
+    <motor name="joint7_ctrl" joint="joint7" class="motor" />
+    <motor name="joint8_ctrl" joint="joint8" class="motor" />
+    <motor name="joint9_ctrl" joint="joint9" class="motor" />
+    <motor name="joint10_ctrl" joint="joint10" class="motor" />
+    <motor name="joint11_ctrl" joint="joint11" class="motor" />
+    <motor name="joint12_ctrl" joint="joint12" class="motor" />
+    <motor name="joint13_ctrl" joint="joint13" class="motor" />
+    <motor name="joint14_ctrl" joint="joint14" class="motor" />
+    <motor name="joint15_ctrl" joint="joint15" class="motor" />
+    <motor name="joint16_ctrl" joint="joint16" class="motor" />
+    <motor name="joint17_ctrl" joint="joint17" class="motor" />
+    <motor name="joint18_ctrl" joint="joint18" class="motor" />
+    <motor name="joint19_ctrl" joint="joint19" class="motor" />
+    <motor name="joint20_ctrl" joint="joint20" class="motor" />
+  </actuator>
+
+  <contact>
+    <exclude body1="base_link" body2="link1" />
+    <exclude body1="link1" body2="link2" />
+    <exclude body1="link2" body2="link3" />
+    <exclude body1="link1" body2="link4" />
+    <exclude body1="link4" body2="link5" />
+    <exclude body1="base_link" body2="link6" />
+    <exclude body1="link6" body2="link7" />
+    <exclude body1="link7" body2="link8" />
+    <exclude body1="link6" body2="link9" />
+    <exclude body1="link9" body2="link10" />
+    <exclude body1="base_link" body2="link11" />
+    <exclude body1="link11" body2="link12" />
+    <exclude body1="link12" body2="link13" />
+    <exclude body1="link11" body2="link14" />
+    <exclude body1="link14" body2="link15" />
+    <exclude body1="base_link" body2="link16" />
+    <exclude body1="link16" body2="link17" />
+    <exclude body1="link17" body2="link18" />
+    <exclude body1="link16" body2="link19" />
+    <exclude body1="link19" body2="link20" />
+  </contact>
+
+  <sensor>
+    <!-- 原有的传感器 -->
+    <framepos name="base_link_site_pos" objtype="site" objname="base_link_site" />
+    <framequat name="base_link_site_quat" objtype="site" objname="base_link_site" />
+    <framelinvel name="base_link_site_linvel" objtype="site" objname="base_link_site" />
+    <frameangvel name="base_link_site_angvel" objtype="site" objname="base_link_site" />
+    <velocimeter name="base_link_site_vel" site="base_link_site" />
+    
+    <!-- ===== 添加: 四条腿的力和力矩传感器 ===== -->
+    <!-- 前左腿 (Front-Left Leg) -->
+    <force name="FL_force_sensor" site="FL_sensor_site"/>
+    <torque name="FL_torque_sensor" site="FL_sensor_site"/>
+
+    <!-- 前右腿 (Front-Right Leg) -->
+    <force name="FR_force_sensor" site="FR_sensor_site"/>
+    <torque name="FR_torque_sensor" site="FR_sensor_site"/>
+
+    <!-- 后左腿 (Hind-Left Leg) -->
+    <force name="HL_force_sensor" site="HL_sensor_site"/>
+    <torque name="HL_torque_sensor" site="HL_sensor_site"/>
+
+    <!-- 后右腿 (Hind-Right Leg) -->
+    <force name="HR_force_sensor" site="HR_sensor_site"/>
+    <torque name="HR_torque_sensor" site="HR_sensor_site"/>
+  </sensor>
+</mujoco>
